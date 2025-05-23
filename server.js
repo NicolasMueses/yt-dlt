@@ -11,10 +11,13 @@ app.get('/download', async (req, res) => {
 
   try {
     const url = `https://www.youtube.com/watch?v=${videoId}`;
+
     res.header('Content-Disposition', 'attachment; filename="video.mp4"');
+    res.header('Content-Type', 'video/mp4');
+
     ytdl(url, {
-      format: 'mp4',
-      quality: 'highestvideo'
+      quality: 'highestvideo',
+      filter: format => format.container === 'mp4' && format.hasVideo && format.hasAudio
     }).pipe(res);
   } catch (e) {
     res.status(500).send('Error: ' + e.message);
